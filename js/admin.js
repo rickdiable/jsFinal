@@ -78,7 +78,7 @@ function changeStatus(e) {
             }
         })
         .then(function (response) {
-            alert("修改訂單成功");
+            alert("修改訂單狀態成功");
             getOrderList();
         })
     console.log(newStatus, e.target.getAttribute("data-id"));

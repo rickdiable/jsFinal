@@ -761,6 +761,7 @@ body {
     top: 35px;
     font-size: 24px;
     text-decoration: none;
+    color: #000000;
 }
 
 .cardItem-quantity span {
