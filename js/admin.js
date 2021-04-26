@@ -1,15 +1,18 @@
 // DOM
 const orderList = document.querySelector('.js-orderList');
 
+// axios key
+const axiosKey = {
+    headers: {
+        'Authorization': token,
+    }
+};
+
 // 取得訂單資料
 let orderData = [];
 
 function getOrderList() {
-    axios.get(`https://hexschoollivejs.herokuapp.com/api/livejs/v1/admin/${api_path}/orders`, {
-            headers: {
-                'Authorization': token,
-            }
-        })
+    axios.get(`https://hexschoollivejs.herokuapp.com/api/livejs/v1/admin/${api_path}/orders`, axiosKey)
         .then(function (response) {
             orderData = response.data.orders;
             console.log(orderData[0]);
@@ -57,6 +60,9 @@ function getOrderList() {
             orderList.innerHTML = str;
             renderC3LV2();
         })
+        .catch(function (error) {
+            console.log(error);
+        })
 }
 
 // 更改處理狀態
@@ -72,14 +78,13 @@ function changeStatus(e) {
                 "id": e.target.getAttribute("data-id"),
                 "paid": newStatus
             }
-        }, {
-            headers: {
-                'Authorization': token,
-            }
-        })
+        }, axiosKey)
         .then(function (response) {
             alert("修改訂單狀態成功");
             getOrderList();
+        })
+        .catch(function (error) {
+            alert("修改失敗，請重新嘗試");
         })
     console.log(newStatus, e.target.getAttribute("data-id"));
 }
@@ -87,19 +92,19 @@ function changeStatus(e) {
 
 // 刪除單筆訂單資料
 function deleteOrderItem(e) {
-    axios.delete(`https://hexschoollivejs.herokuapp.com/api/livejs/v1/admin/${api_path}/orders/${e.target.getAttribute("data-id")}`, {
-            headers: {
-                'Authorization': token,
-            }
-        })
+    axios.delete(`https://hexschoollivejs.herokuapp.com/api/livejs/v1/admin/${api_path}/orders/${e.target.getAttribute("data-id")}`, axiosKey)
         .then(function (response) {
             alert("刪除該筆訂單成功");
             getOrderList();
+        })
+        .catch(function (response) {
+            alert("刪除失敗，請重新嘗試");
         })
 }
 
 // 合併orderList上的監聽
 orderList.addEventListener("click", function (e) {
+    e.preventDefault();
     if (e.target.getAttribute("class") == "orderStatus") {
         changeStatus(e);
     } else if (e.target.getAttribute("class") == "delSingleOrder-Btn") {
@@ -112,14 +117,13 @@ const discardAllBtn = document.querySelector('.discardAllBtn');
 discardAllBtn.addEventListener("click", deleteAllOrder);
 
 function deleteAllOrder(e) {
-    axios.delete(`https://hexschoollivejs.herokuapp.com/api/livejs/v1/admin/${api_path}/orders`, {
-            headers: {
-                'Authorization': token,
-            }
-        })
+    axios.delete(`https://hexschoollivejs.herokuapp.com/api/livejs/v1/admin/${api_path}/orders`, axiosKey)
         .then(function (response) {
             alert("刪除該筆訂單成功");
             getOrderList();
+        })
+        .catch(function (error) {
+            alert("刪除所有訂單失敗，請重新嘗試");
         })
 }
 

@@ -148,14 +148,19 @@ function postProductId(e) {
     })
 
     axios.post(`${baseUrl}/api/livejs/v1/customer/${api_path}/carts`, {
-        "data": {
-            "productId": productId,
-            "quantity": numCheck
-        }
-    }).then(function (response) {
-        alert("商品已成功加入購物車");
-        getCartList();
-    })
+            "data": {
+                "productId": productId,
+                "quantity": numCheck
+            }
+        })
+        .then(function (response) {
+            alert("商品已成功加入購物車");
+            getCartList();
+        })
+        .catch(function (error) {
+            console.log(error);
+            alert("加入購物車失敗，請重新嘗試");
+        })
 }
 
 // 點擊加減icon更換購物車中產品數量
@@ -215,6 +220,9 @@ function deleteCartItem(e) {
                 alert("刪除單筆購物車成功");
                 getCartList();
             })
+            .catch(function (error) {
+                alert("刪除失敗，請重新嘗試");
+            })
     }
 }
 
@@ -226,8 +234,8 @@ function deleteAllCart(e) {
             alert("刪除所有購物車成功！");
             getCartList();
         })
-        .catch(function (response) {
-            alert("購物車已清空，請勿重複點擊")
+        .catch(function (error) {
+            alert("購物車已清空，請勿重複點擊");
         })
 }
 
@@ -251,26 +259,32 @@ function postOrderInfo(e) {
 
     // post訂單資料
     axios.post(`https://hexschoollivejs.herokuapp.com/api/livejs/v1/customer/${api_path}/orders`, {
-        "data": {
-            "user": {
-                "name": customerName,
-                "tel": customerPhone,
-                "email": customerEmail,
-                "address": customerAddress,
-                "payment": customerTradeWay
+            "data": {
+                "user": {
+                    name: customerName,
+                    tel: customerPhone,
+                    email: customerEmail,
+                    address: customerAddress,
+                    payment: customerTradeWay
+                }
             }
-        }
-    }).then(function (response) {
-        alert("訂單建立成功");
-        // 清空表單資料並再次初始化購物車列表
-        document.querySelector("#customerName").value = "";
-        document.querySelector("#customerPhone").value = "";
-        document.querySelector("#customerEmail").value = "";
-        document.querySelector("#customerAddress").value = "";
-        document.querySelector("#tradeWay").value = "ATM";
-        getCartList();
-    })
+        })
+        .then(function (response) {
+            alert("訂單建立成功");
+            // 清空表單資料並再次初始化購物車列表
+            document.querySelector("#customerName").value = "";
+            document.querySelector("#customerPhone").value = "";
+            document.querySelector("#customerEmail").value = "";
+            document.querySelector("#customerAddress").value = "";
+            document.querySelector("#tradeWay").value = "ATM";
+            getCartList();
+        })
+        .catch(function (error) {
+            console.log(error);
+            alert('送出訂單失敗，請重新嘗試');
+        })
 }
+
 
 // email及電話輸入錯誤提醒
 function emailReminder() {
